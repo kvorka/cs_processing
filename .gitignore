@@ -1,3 +1,4 @@
-/state
+state
+__pycache__
 *.png
 *.mp4
