@@ -9,7 +9,7 @@ from pylib.gmt import gmt_load
 #####################################################################
 path  = 'state/ridge_20km_cs32x32x20/'
 irad  = 15
-itime = 100
+itime = 101
 
 #####################################################################
 ## Preparing grid information about the cubed-sphere grid and the  ##
@@ -33,12 +33,12 @@ data_V   = csLoader.rotate( csLoader.load( 'U', time=itime, level=irad ),
 
 csLoader.mask( irad, grd.CS, data_W, data_U, data_V )
 
-Eta_LL = xmfRegridder.regrid( data_Eta )    
-U_LL   = xmfRegridder.regrid( data_U ) * 100
-V_LL   = xmfRegridder.regrid( data_V ) * 100
-W_LL   = xmfRegridder.regrid( data_W ) * 100
+Eta_LL = [ xmfRegridder.regrid( data_Eta ) ]
+U_LL   = [ xmfRegridder.regrid( data_U ) * 100 ]
+V_LL   = [ xmfRegridder.regrid( data_V ) * 100 ]
+W_LL   = [ xmfRegridder.regrid( data_W ) * 100 ]
 
 #####################################################################
 ## Plotting data.                                                  ##
 #####################################################################
-gmtPlotter.vplot( U_LL, V_LL )
+gmtPlotter.plot( U_LL, namefig='U' )

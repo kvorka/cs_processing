@@ -47,6 +47,6 @@ for itime in range(ntime+1):
 #####################################################################
 ## Plotting data.                                                  ##
 #####################################################################
-gmtPlotter.plot( U_LL, namefig='Zonal velocity' )
+gmtPlotter.vplot( U_LL, V_LL, namefig='Horizontal speed with lateral vectors' )
 
-make_animation( 'Zonal velocity ', 'movie-zon.mp4' )
+make_animation( 'Horizontal speed with lateral vectors ', 'movie-hvec.mp4' )

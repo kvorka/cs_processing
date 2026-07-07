@@ -8,7 +8,7 @@ class cbs_load:
         
         for i in range(6):
             self.tiles.append( netCDF4.Dataset(path2cs+'state.0000000000.t00'+str(i+1)+'.nc', 'r') )
-
+    
     def load(self, var, time, level=None):
         data_CS = []
         
