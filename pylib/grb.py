@@ -1,4 +1,3 @@
-import os
 import sys
 import numpy
 import array
@@ -18,8 +17,7 @@ def coord2vector(x, y, z):
 
 def angle_between_vectors(vec1, vec2):
     vprod = numpy.sum( vec1 * vec2, axis=2 )
-    nrm   = numpy.sqrt( numpy.sum( vec1**2, axis=2 ) * 
-                        numpy.sum( vec2**2, axis=2 ) )
+    nrm   = numpy.sqrt( numpy.sum( vec1**2, axis=2 ) * numpy.sum( vec2**2, axis=2 ) )
     
     return numpy.arccos( numpy.clip( vprod / nrm, -1., 1. ) )
 
@@ -37,10 +35,7 @@ def rotate_about_zaxis(lx, ly, lz, angle):
        c = 0.
        s = numpy.sign( s )
     
-    x = c * lx - s * ly
-    y = s * lx + c * ly
-    
-    return x, y, lz.copy()
+    return c*lx-s*ly, s*lx+c*ly, lz.copy()
 
 def rotate_about_yaxis(lx, ly, lz, angle):
     s = numpy.sin( angle )
@@ -50,10 +45,7 @@ def rotate_about_yaxis(lx, ly, lz, angle):
        c = 0.
        s = numpy.sign( s )
     
-    x = +c * lx + s * lz
-    z = -s * lx + c * lz
-    
-    return x, ly.copy(), z
+    return c*lx+s*lz, ly.copy(), -s*lx+c*lz
 
 def rotate_about_xaxis(lx, ly, lz, angle):
     s = numpy.sin( angle )
@@ -63,35 +55,28 @@ def rotate_about_xaxis(lx, ly, lz, angle):
        c = 0.
        s = numpy.sign( s )
     
-    y = c * ly - s * lz
-    z = s * ly + c * lz
-    
-    return lx.copy(), y, z
+    return lx.copy(), c*ly-s*lz, s*ly+c*lz
 
 def map_lonlat2xyz(lon, lat):
-    x = numpy.cos(lat) * numpy.cos(lon)
-    y = numpy.cos(lat) * numpy.sin(lon)
-    z = numpy.sin(lat)
-    
-    return x, y, z
+    return numpy.cos(lat) * numpy.cos(lon), numpy.cos(lat) * numpy.sin(lon), numpy.sin(lat)
 
 def map_xyz2lonlat(x, y, z):
-    a  = numpy.sqrt( x**2 + y**2 )
-    a1 = numpy.where( a == 0.0, 1.0, a )
-    
-    x1 = numpy.where( x == 0.0, 1.0, x )
-    y1 = numpy.where( x == 0.0, numpy.inf, y )
-    z1 = numpy.where( a == 0.0, numpy.sign( numpy.where( z == 0.0, 1.0, z ) ) * numpy.inf, z )
-    
-    lon = numpy.arctan( y1 / x1 )
-    lon = numpy.where( ( x <  0.0 ) & ( y >= 0.0 ), +numpy.pi + lon, lon )
-    lon = numpy.where( ( x <= 0.0 ) & ( y <  0.0 ), -numpy.pi + lon, lon)
-    
-    lat = numpy.arctan( z1 / a1 )
-    lat = numpy.where( ( a == 0.0 ) & ( z == 0.0 ), numpy.nan, lat )
-    
-    return numpy.arctan2(y, x), numpy.arctan2(z, numpy.hypot(x, y))
+    #a  = numpy.sqrt( x**2 + y**2 )
+    #a1 = numpy.where( a == 0.0, 1.0, a )
+    #
+    #x1 = numpy.where( x == 0.0, 1.0, x )
+    #y1 = numpy.where( x == 0.0, numpy.inf, y )
+    #z1 = numpy.where( a == 0.0, numpy.sign( numpy.where( z == 0.0, 1.0, z ) ) * numpy.inf, z )
+    #
+    #lon = numpy.arctan( y1 / x1 )
+    #lon = numpy.where( ( x <  0.0 ) & ( y >= 0.0 ), +numpy.pi + lon, lon )
+    #lon = numpy.where( ( x <= 0.0 ) & ( y <  0.0 ), -numpy.pi + lon, lon)
+    #
+    #lat = numpy.arctan( z1 / a1 )
+    #lat = numpy.where( ( a == 0.0 ) & ( z == 0.0 ), numpy.nan, lat )
+    #
     #return lon, lat
+    return numpy.arctan2(y, x), numpy.arctan2(z, numpy.hypot(x, y))
 
 def WofZ(z):
     A = [ 1.47713057321600, -0.38183513110512, -0.05573055466344, \
@@ -343,13 +328,9 @@ def excess_of_quad(v1, v2, v3, v4):
     p2 = plane_normal( v2, v3 )
     p3 = plane_normal( v3, v4 )
     p4 = plane_normal( v4, v1 )
-
-    sum_angles = ( angle_between_vectors( p2, p1 ) +
-                   angle_between_vectors( p3, p2 ) +
-                   angle_between_vectors( p4, p3 ) +
-                   angle_between_vectors( p1, p4 ) )
     
-    return 2 * numpy.pi - sum_angles
+    return 2 * numpy.pi - ( angle_between_vectors( p2, p1 ) + angle_between_vectors( p3, p2 ) +
+                            angle_between_vectors( p4, p3 ) + angle_between_vectors( p1, p4 ) )
 
 def calc_fvgrid(lx,ly):
     nxf = lx.shape[0]
@@ -676,14 +657,6 @@ def gengrid(Rsphere, nx, path, nratio=4, method='conf', ornt='c', prec='d', mach
         del dXdx, dXdy, dYdx, dYdy, dZdx, dZdy
     
     XG, YG, ZG = map_lonlat2xyz(lonG, latG)
-    
-    os.makedirs(path, exist_ok=True)
-    with open(os.path.join(path, 'grid.info'), 'w') as fout:
-        fout.write(f"nx={nx-1}\n")
-        fout.write(f"nratio={nratio}\n")
-        fout.write(f"nxf={(nx-1)*nratio}\n")
-        fout.write(f"mapping={method}\n")
-        fout.write(f"orientation={ornt}\n")
     
     idx = slice(0,nx-1)
 
