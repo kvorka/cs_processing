@@ -147,75 +147,40 @@ def map_xyz2lonlat(x, y, z):
     return numpy.arctan2(y, x), numpy.arctan2(z, numpy.hypot(x, y))
 
 def map_xy2xyz(xi, yi):
-    def WofZ(z):
-        A = [ 1.47713057321600, -0.38183513110512, -0.05573055466344, \
-             -0.01895884801823, -0.00791314396396, -0.00486626515498, \
-             -0.00329250387158, -0.00235482619663, -0.00175869000970, \
-             -0.00135682443774, -0.00107458043205, -0.00086946107050, \
-             -0.00071604933286, -0.00059869243613, -0.00050696402446, \
-             -0.00043418115349, -0.00037537743098, -0.00032745130951, \
-             -0.00028769063795, -0.00025464473946, -0.00022659577923, \
-             -0.00020297175587, -0.00018247947703, -0.00016510295548, \
-             -0.00014967258633, -0.00013660647356, -0.00012466390509, \
-             -0.00011468147908, -0.00010518717478, -0.00009749136078  ]
-        
-        return numpy.polyval( A[::-1], z ) * z
-
+    A = numpy.array([ -0.00009749136078, -0.00010518717478, -0.00011468147908, -0.00012466390509, -0.00013660647356, 
+                      -0.00014967258633, -0.00016510295548, -0.00018247947703, -0.00020297175587, -0.00022659577923, 
+                      -0.00025464473946, -0.00028769063795, -0.00032745130951, -0.00037537743098, -0.00043418115349, 
+                      -0.00050696402446, -0.00059869243613, -0.00071604933286, -0.00086946107050, -0.00107458043205,
+                      -0.00135682443774, -0.00175869000970, -0.00235482619663, -0.00329250387158, -0.00486626515498, 
+                      -0.00791314396396, -0.01895884801823, -0.05573055466344, -0.38183513110512,  1.47713057321600 ] )
+    
     xc = numpy.abs(xi)
     yc = numpy.abs(yi)
+    zc = (1 - xc) + 1j * (1 - yc)
     
-    mask_kxy = yc > xc
-    mask_kx  = xi < 0.0
-    mask_ky  = yi < 0.0
+    zc = ( numpy.where( yc > xc, zc.imag + 1j * zc.real, zc ) / 2 ) ** 4
     
-    x1_orig = xc.copy()
-    y1_orig = yc.copy()
+    k = ( numpy.sqrt(3.) - 1 ) / 2
+    W = 1j**(1./3) * ( numpy.polyval(A, zc) * zc * 1j )**(1./3)
+    W = ( W - 2 * k ) / ( ( 1j - 1 ) * ( k * W + 1 ) )
     
-    xc = 1.0 - xc
-    yc = 1.0 - yc
+    z = 2 / ( 1 + numpy.abs(W)**2 )
+    W = W * z
+    W = numpy.where( yc > xc, 1j * W.conj(), W )
     
-    xc = numpy.where( mask_kxy, 1.0 - y1_orig, xc )
-    yc = numpy.where( mask_kxy, 1.0 - x1_orig, yc )
+    x = numpy.sign( xi ) * numpy.abs( W.real )
+    y = numpy.sign( yi ) * numpy.abs( W.imag )
+    z = z - 1
     
-    zi = ( (xc + 1j * yc) / 2 )**4
-    W  = WofZ(zi)
-    
-    thrd = 1./3.
-    i3 = 1j**thrd
-    ra = numpy.sqrt(3.0) - 1.0
-    cb = 1j - 1.0
-    cc = ra * cb / 2.0
-    
-    W = i3 * (W * 1j)**thrd
-    W = (W - ra) / (cb + cc * W)
-    
-    x1 = numpy.real(W)
-    y1 = numpy.imag(W)
-    
-    H = 2.0 / (1.0 + x1**2 + y1**2)
-    x1 = x1 * H
-    y1 = y1 * H
-    z1 = H - 1.0
-    
-    t1 = x1.copy()
-    x1 = numpy.where( mask_kxy, y1, x1 )
-    y1 = numpy.where( mask_kxy, t1, y1 )
-    
-    x1 = numpy.where( mask_kx, -x1, x1 )
-    y1 = numpy.where( mask_ky, -y1, y1 )
-    
-    x1 = numpy.where( xi == 0.0, 0.0, x1 )
-    y1 = numpy.where( yi == 0.0, 0.0, y1 )
-    
-    return x1, y1, z1
+    return x, y, z
 
 def conf_d(qq):
     n = len( qq )
     q = numpy.interp( numpy.linspace( 0, n-1, 2*n-1 ), numpy.arange( n ), qq )
     
-    lx1, ly1, lz1 = map_xy2xyz( *numpy.meshgrid( q, q, indexing='ij' ) )
+    lx, ly, lz = map_xy2xyz( *numpy.meshgrid( q, q, indexing='ij' ) )
     
-    vertices = coord2vector( lx1[::2,::2], ly1[::2,::2], lz1[::2,::2] )
+    vertices = coord2vector( lx[::2,::2], ly[::2,::2], lz[::2,::2] )
     
     return angle_between_vectors( vertices[:-1,:-1,:], vertices[1:,:-1,:] )
 
