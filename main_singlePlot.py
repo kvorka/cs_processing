@@ -8,8 +8,8 @@ from pylib.gmt import gmt_load
 #####################################################################
 ## Time and radial points of interest.                             ##
 #####################################################################
-irad  = 15
-itime = 200
+irad  = 17
+itime = 35
 
 #####################################################################
 ## Preparing grid information about the cubed-sphere grid and the  ##
@@ -19,7 +19,7 @@ itime = 200
 ## to set use_weights to False in xmf_load or delete the dir with  ##
 ## weights in target directory (preferred for speed).              ##
 #####################################################################
-grd          = grd_load( path2cs = path, resolve = 2. )
+grd          = grd_load( path2cs = path, resolve = 0.5 )
 csLoader     = cbs_load( path2cs = path )
 gmtPlotter   = gmt_load( grid_LL = grd.LL )
 xmfRegridder = xmf_load( grid_CS = grd.CS, grid_LL = grd.LL, path2wg = path )
