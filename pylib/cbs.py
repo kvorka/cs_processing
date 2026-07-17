@@ -34,11 +34,11 @@ class cbs_load:
                 print()
         
         if self.load_monitor:
-            KE    = numpy.max( numpy.ma.filled( self.monitor['ke_mean'] ) )
-            cflU  = numpy.max( numpy.ma.filled( self.monitor['advcfl_uvel_max'] ) )
-            cflV  = numpy.max( numpy.ma.filled( self.monitor['advcfl_vvel_max'] ) )
-            cflW  = numpy.max( numpy.ma.filled( self.monitor['advcfl_wvel_max'] ) )
-            cflWb = numpy.max( numpy.ma.filled( self.monitor['advcfl_W_hf_max'] ) )
+            KE    = numpy.ma.filled( self.monitor['ke_mean'] )[-1]
+            cflU  = numpy.ma.filled( self.monitor['advcfl_uvel_max'] )[-1]
+            cflV  = numpy.ma.filled( self.monitor['advcfl_vvel_max'] )[-1]
+            cflW  = numpy.ma.filled( self.monitor['advcfl_wvel_max'] )[-1]
+            cflWb = numpy.ma.filled( self.monitor['advcfl_W_hf_max'] )[-1]
             
             print( f'Mean kinetic energy: {KE}' )
             print( f'Azimuthal cfl: {cflU}' )
@@ -53,6 +53,7 @@ class cbs_load:
             
             matplotlib.pyplot.xlabel( 'Time [s]' )
             matplotlib.pyplot.ylabel( 'KE' )
+            matplotlib.pyplot.yscale( 'log' )
             matplotlib.pyplot.grid( True )
             matplotlib.pyplot.show()
     

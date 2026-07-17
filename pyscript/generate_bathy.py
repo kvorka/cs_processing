@@ -91,8 +91,8 @@ write_bin( 'topo_cs.bin', topo )
 ## Generating tidal potential file.                                                                ##
 #####################################################################################################
 omega = 2 * numpy.pi / period
-fobl  = +1.50 * omega**2 * a**2 * numpy.deg2rad( obl )
-fecc  = -0.75 * omega**2 * a**2 * ecc
+fobl  = -1.50 * omega**2 * a**2 * numpy.deg2rad( obl )
+fecc  = +0.75 * omega**2 * a**2 * ecc
 
 times = numpy.arange( 0, period, period / nt )
 ctime = numpy.reshape( numpy.cos(omega * times), (1, 1, -1) )
