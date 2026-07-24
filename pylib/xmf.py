@@ -1,6 +1,4 @@
-import warnings
-warnings.filterwarnings( 'ignore', message='.*ESMF and ESMPy.*' )
-
+import warnings; warnings.filterwarnings( 'ignore', message='.*ESMF and ESMPy.*' )
 import os
 import numpy
 import xesmf
