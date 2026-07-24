@@ -1,15 +1,18 @@
 #####################################################################
+## Rotational period in seconds.                                   ##
+#####################################################################
+period = 306806.
+
+#####################################################################
 ## Paths to various datasets prepared over time.                   ##
 #####################################################################
-path_flat1  = "state/flat_32x32x20_Ah1e4_Av1e1/";  ntiles_flat1  = 6
-path_flat2  = "state/flat_32x32x20_Ah1e3_Av1e0/";  ntiles_flat2  = 6
-path_ridge1 = "state/ridge_32x32x20_Ah1e4_Av1e1/"; ntiles_ridge1 = 6
-path_ridge2 = "state/ridge_32x32x20_Ah1e3_Av1e0/"; ntiles_ridge2 = 6
-path_exch2  = "state/run_exch2_32x32x20/";         ntiles_exch2  = 6
-path_exch2a = "state/run_exch2_64x64x50/";         ntiles_exch2a = 12
+path_flat = "state/flat_64x64x50_Ah=10_Av=10/"; ntiles_flat = 6
+path_flat2 = "state/flat_64x64x50_Ah=10_Av=1/"; ntiles_flat2 = 12
+path_ridge = "state/ridge10_64x64x50_Ah=10_Av=10/"; ntiles_ridge = 6
+path_exp = "state/run_experiment/"; ntiles_exp = 6
 
 #####################################################################
 ## The chosen one.                                                 ##
 #####################################################################
-path   = path_exch2a
-ntiles = ntiles_exch2a
+path   = path_flat2
+ntiles = ntiles_flat2

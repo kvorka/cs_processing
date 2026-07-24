@@ -9,9 +9,6 @@ copy_data() {
     cp "$1"grid.t* "$2"
 }
 
-copy_data "/nfsjk/kvorka/MITgcm-tides-custom-latest/run-exch2/" "state/run_exch2_64x64x50/"
-#copy_data "/nfsjk/kvorka/MITgcm-tides-custom/run_exch2/" "state/run_exch2_32x32x20/"
-#copy_data "/nfsjk/kvorka/MITgcm-tides-custom/run_cs32x32x20_Ah1e4_Av1e1_ridge/" "state/ridge_32x32x20_Ah1e4_Av1e1/"
-#copy_data "/nfsjk/kvorka/MITgcm-tides-custom/run_cs32x32x20_Ah1e3_Av1e0_ridge/" "state/ridge_32x32x20_Ah1e3_Av1e0/"
-#copy_data "/nfsjk/kvorka/MITgcm-tides-custom/run_cs32x32x20_Ah1e4_Av1e1_flat/" "state/flat_32x32x20_Ah1e4_Av1e1/"
-#copy_data "/nfsjk/kvorka/MITgcm-tides-custom/run_cs32x32x20_Ah1e3_Av1e0_flat/" "state/flat_32x32x20_Ah1e3_Av1e0/"
+copy_data "/nfsjk/kvorka/MITgcm-tides-custom-latest/run-flat/" "state/flat_64x64x50_Ah=10_Av=1/"
+#copy_data "/nfsjk/kvorka/MITgcm-tides-custom-latest/run-flat/" "state/flat_64x64x50_Ah=10_Av=10/"
+#copy_data "/nfsjk/kvorka/MITgcm-tides-custom-latest/run-ridge/" "state/ridge10_64x64x50_Ah=10_Av=10/"

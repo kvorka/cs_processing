@@ -8,7 +8,7 @@ class gmt_load:
         self.cpallete  = 'vik'
         self.cpallete2 = 'nuuk'
         self.vstride   = 14
-        self.vresc     = 0.5
+        self.vresc     = 2.
         
         pygmt.config( MAP_FRAME_PEN = '1.0p,black',
                       MAP_GRID_PEN  = '0.5p,gray60' )

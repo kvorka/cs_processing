@@ -1,4 +1,4 @@
-from pylib.pth import path, ntiles
+from pylib.pth import path, ntiles, period
 from pylib.cbs import cbs_load
 
 #####################################################################
@@ -12,4 +12,4 @@ csLoader = cbs_load( path2cs      = path,
 #####################################################################
 ## Check the data.                                                 ##
 #####################################################################
-csLoader.check_data( 'Eta', 'U', 'V', 'W' )
+csLoader.check_data( period, 'Eta', 'U', 'V', 'W' )

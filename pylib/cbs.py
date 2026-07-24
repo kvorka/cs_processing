@@ -18,7 +18,7 @@ class cbs_load:
         if self.load_monitor:
             self.monitor = netCDF4.Dataset(path2cs+'monitor.0000000000.t001.nc', 'r')
         
-    def check_data(self, *args):
+    def check_data(self, period, *args):
         if self.load_data:
             for var in args:
                 *leading, nlat, nlon = self.tiles[0][var].shape
@@ -46,15 +46,15 @@ class cbs_load:
             print( f'Vertical cfl: {cflW}' )
             print( f'Vertical cfl with bathymetry: {cflWb}' )
             
-            time = numpy.ma.filled( self.monitor['T'] )
+            time = numpy.ma.filled( self.monitor['T'] ) / period
             KE   = numpy.ma.filled( self.monitor['ke_mean'] )
             
             matplotlib.pyplot.plot( time, KE, linestyle='-' )
             
-            matplotlib.pyplot.xlabel( 'Time [s]' )
-            matplotlib.pyplot.ylabel( 'KE' )
+            matplotlib.pyplot.xlabel( 'Number of periods' )
+            matplotlib.pyplot.ylabel( 'Mean kinetic energy' )
             matplotlib.pyplot.yscale( 'log' )
-            matplotlib.pyplot.grid( True )
+            matplotlib.pyplot.grid( True, which='both' )
             matplotlib.pyplot.show()
     
     def load(self, var, time, level=None):
